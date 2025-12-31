@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/BlazingTrails/">
+    <Project Path="BlazingTrails/BlazingTrails.Client/BlazingTrails.Client.csproj" />
+  </Folder>
+</Solution>
