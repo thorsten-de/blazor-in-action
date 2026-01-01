@@ -1,7 +1,53 @@
 ﻿@page "/"
+@inject HttpClient Http
 
-<h3>HomePage</h3>
+<PageTitle>Blazing Trails</PageTitle>
+
+@if (_trails is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="grid">
+        @foreach (var trail in _trails)
+        {
+            <div class="card shadow" style="width: 18rem;">
+                <img src="@trail.Image" class="card-img-top" alt="@trail.Name">
+                <div class="card-body">
+                    <h5 class="card-title">@trail.Name</h5>
+                    <h6 class="card-subtitle mb-3 text-muted">
+                        <span class="bi bi-geo-alt-fill"></span>
+                        @trail.Location
+                    </h6>
+                    <div class="d-flex justify-content-between">
+                        <span>
+                            <span class="bi bi-clock mr-2"></span>
+                            @trail.TimeFormatted
+                        </span>
+                        <span>
+                            <span class="bi bi-infinity mr-2"></span>
+                            @trail.Length km
+                        </span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
 
 @code {
+    private IEnumerable<Trail>? _trails;
 
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _trails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
+        }
+        catch (HttpRequestException ex)
+        {         
+            Console.Error.WriteLine($"There was a problem fetching the trail data: {ex.Message}");
+        }
+    }
 }
