@@ -27,6 +27,8 @@
 
     await Task.Delay(1000);
     _greeting.Add("to");
+    StateHasChanged();
+
 
     await Task.Delay(1000);
     _greeting.Add("Blazor in Action");
