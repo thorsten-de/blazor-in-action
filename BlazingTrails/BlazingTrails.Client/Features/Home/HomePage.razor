@@ -3,32 +3,34 @@
 
 <PageTitle>Blazing Trails</PageTitle>
 
+<Lifecycle />
+
 @if (_trails is null)
 {
-    <p><em>Loading...</em></p>
+  <p><em>Loading...</em></p>
 }
 else
 {
-    <div class="grid">
-        @foreach (var trail in _trails)
-        {
-            <TrailCard trail="trail"/>
-        }
-    </div>
+  <div class="grid">
+    @foreach (var trail in _trails)
+    {
+      <TrailCard trail="trail" />
+    }
+  </div>
 }
 
 @code {
-    private IEnumerable<Trail>? _trails;
+  private IEnumerable<Trail>? _trails;
 
-    protected override async Task OnInitializedAsync()
+  protected override async Task OnInitializedAsync()
+  {
+    try
     {
-        try
-        {
-            _trails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
-        }
-        catch (HttpRequestException ex)
-        {         
-            Console.Error.WriteLine($"There was a problem fetching the trail data: {ex.Message}");
-        }
+      _trails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
     }
+    catch (HttpRequestException ex)
+    {
+      Console.Error.WriteLine($"There was a problem fetching the trail data: {ex.Message}");
+    }
+  }
 }
