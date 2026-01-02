@@ -1,8 +1,15 @@
 ﻿<h3>Component Lifecycle</h3>
 <p>Check the browser console for details...</p>
 
+@foreach (var word in _greeting)
+{
+  <p>@word</p>
+}
+
 
 @code {
+  List<string> _greeting = [];
+
   public override async Task SetParametersAsync(ParameterView parameters)
   {
     Console.WriteLine("SetParametersAsync - Begin");
@@ -15,7 +22,15 @@
   protected override async Task OnInitializedAsync()
   {
     Console.WriteLine("OnInitializedAsync - Begin");
-    await Task.Delay(300);
+
+    _greeting.Add("Welcome");
+
+    await Task.Delay(1000);
+    _greeting.Add("to");
+
+    await Task.Delay(1000);
+    _greeting.Add("Blazor in Action");
+
     Console.WriteLine("OnInitializedAsync - End");
   }
 
