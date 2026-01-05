@@ -13,7 +13,7 @@ else
   <div class="grid">
     @foreach (var trail in _trails)
     {
-      <TrailCard trail="trail" />
+      <TrailCard trail="trail" OnSelected="HandleTrailSelected" />
     }
   </div>
 }
@@ -21,6 +21,11 @@ else
 @code {
   private IEnumerable<Trail>? _trails;
   private Trail? _selectedTrail;
+
+  public void HandleTrailSelected(Trail trail) {
+    _selectedTrail = trail;
+    StateHasChanged();
+  }
 
   protected override async Task OnInitializedAsync()
   {
