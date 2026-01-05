@@ -22,10 +22,8 @@ else
   private IEnumerable<Trail>? _trails;
   private Trail? _selectedTrail;
 
-  public void HandleTrailSelected(Trail trail) {
+  public void HandleTrailSelected(Trail trail) => 
     _selectedTrail = trail;
-    StateHasChanged();
-  }
 
   protected override async Task OnInitializedAsync()
   {

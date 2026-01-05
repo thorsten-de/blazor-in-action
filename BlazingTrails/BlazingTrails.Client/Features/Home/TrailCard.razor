@@ -1,22 +1,22 @@
 ﻿<div class="card shadow" style="width: 18rem;">
-    <img src="@trail.Image" class="card-img-top" alt="@trail.Name">
+    <img src="@Trail.Image" class="card-img-top" alt="@Trail.Name">
     <div class="card-body">
-        <h5 class="card-title">@trail.Name</h5>
+        <h5 class="card-title">@Trail.Name</h5>
         <h6 class="card-subtitle mb-3 text-muted">
             <span class="bi bi-geo-alt-fill"></span>
-            @trail.Location
+            @Trail.Location
         </h6>
         <div class="d-flex justify-content-between">
             <span>
                 <span class="bi bi-clock mr-2"></span>
-                @trail.TimeFormatted
+                @Trail.TimeFormatted
             </span>
             <span>
                 <span class="bi bi-infinity mr-2"></span>
-                @trail.Length km
+                @Trail.Length km
             </span>
         </div>
-        <button class="btn btn-primary" title="View" @onclick="@(() => OnSelected?.Invoke(trail))">
+        <button class="btn btn-primary" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
             <i class="bi bi-binoculars"></i>
         </button>
     </div>
@@ -24,8 +24,8 @@
 
 @code {
     [Parameter, EditorRequired]
-    public Trail trail { get; set; } = default!;
+    public Trail Trail { get; set; } = default!;
     
     [Parameter, EditorRequired]
-    public Action<Trail> OnSelected { get; set; }
+    public EventCallback<Trail> OnSelected { get; set; }
 }
