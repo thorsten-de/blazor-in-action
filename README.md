@@ -11,3 +11,5 @@ There are likely to be some minor (and hopefully few major) differences to the b
 
 When we create the webapi project, we need to tell that we want to use controllers, 
 as the default has changed to start with a minimal api: `dotnet new webapi --use-controllers ...`
+
+Configure the Project to support a Blazor WebAssembly client: https://www.nuget.org/packages/Microsoft.AspNetCore.Components.WebAssembly.Server
