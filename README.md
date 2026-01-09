@@ -5,3 +5,9 @@ In this repo, I follow the book [Blazor in Action](https://www.manning.com/books
 ## Differences with .NET 10
 
 There are likely to be some minor (and hopefully few major) differences to the book version when using .NET 10 to implement the examples. I'd like to have them documented here.
+
+
+### Appendix: Adding an ASP.NET Core Web API
+
+When we create the webapi project, we need to tell that we want to use controllers, 
+as the default has changed to start with a minimal api: `dotnet new webapi --use-controllers ...`
