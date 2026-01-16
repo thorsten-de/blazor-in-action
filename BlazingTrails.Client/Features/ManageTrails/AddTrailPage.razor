@@ -1,0 +1,29 @@
+@page "/add-trail"
+
+<PageTitle>Add Trail - Blazing Trails</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
+    </ol>
+</nav>
+
+<h3 class="mt-5 mb-4">Add a trail</h3>
+
+<EditForm Model="_trail" OnValidSubmit="SubmitForm">
+  <div class="row">
+    <div class="offset-4 col-8 text-right">
+      <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new())">Reset</button>
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </div>
+  </div>
+</EditForm>
+
+@code {
+  private TrailDto _trail = new();
+
+  private async Task SubmitForm(){
+    Console.WriteLine("Submit...");
+  }
+}
