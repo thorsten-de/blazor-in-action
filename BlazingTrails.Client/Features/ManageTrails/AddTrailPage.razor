@@ -12,6 +12,34 @@
 <h3 class="mt-5 mb-4">Add a trail</h3>
 
 <EditForm Model="_trail" OnValidSubmit="SubmitForm">
+  <FormSection 
+    Title="Basic Details"
+    HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
+    <div class="row mb-3">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="trailName" class="fw-bold text-secondary">Name</label>
+          <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <div class="form-group">
+          <label for="trailDescription" class="fw-bold text-secondary">Description</label>
+          <InputTextArea @bind-Value="_trail.Description" class="form-control" id="trailDescription" rows="6" />
+        </div>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="trailLocation" class="fw-bold text-secondary">Location</label>
+          <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
+        </div>
+      </div>
+    </div>
+  </FormSection>
   <div class="row">
     <div class="offset-4 col-8 text-right">
       <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new())">Reset</button>
