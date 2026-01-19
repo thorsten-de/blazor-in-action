@@ -12,8 +12,7 @@
 <h3 class="mt-5 mb-4">Add a trail</h3>
 
 <EditForm Model="_trail" OnValidSubmit="SubmitForm">
-  <FormSection 
-    Title="Basic Details"
+  <FormSection Title="Basic Details"
     HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
     <FormFieldSet Width="col-6">
       <label for="trailName" class="fw-bold text-secondary">Name</label>
@@ -28,6 +27,15 @@
       <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
     </FormFieldSet>
   </FormSection>
+
+  <FormSection Title="Difficulty"
+    HelpText="Help other hikers by telling them the length of the trail, so they know how log it might take them.">
+    <FormFieldSet Width="col-3">
+      <label for="trailLength" class="fw-bold text-secondary">Length (km)</label>
+      <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
+    </FormFieldSet>
+  </FormSection>
+
   <div class="row">
     <div class="offset-4 col-8 text-right">
       <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new())">Reset</button>
