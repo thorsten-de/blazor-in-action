@@ -15,30 +15,18 @@
   <FormSection 
     Title="Basic Details"
     HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
-    <div class="row mb-3">
-      <div class="col-6">
-        <div class="form-group">
-          <label for="trailName" class="fw-bold text-secondary">Name</label>
-          <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
-        </div>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col">
-        <div class="form-group">
-          <label for="trailDescription" class="fw-bold text-secondary">Description</label>
-          <InputTextArea @bind-Value="_trail.Description" class="form-control" id="trailDescription" rows="6" />
-        </div>
-      </div>
-    </div>
-    <div class="row mb-3">
-      <div class="col-6">
-        <div class="form-group">
-          <label for="trailLocation" class="fw-bold text-secondary">Location</label>
-          <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
-        </div>
-      </div>
-    </div>
+    <FormFieldSet Width="col-6">
+      <label for="trailName" class="fw-bold text-secondary">Name</label>
+      <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
+    </FormFieldSet>
+    <FormFieldSet>
+      <label for="trailDescription" class="fw-bold text-secondary">Description</label>
+      <InputTextArea @bind-Value="_trail.Description" class="form-control" id="trailDescription" rows="6" />
+    </FormFieldSet>
+    <FormFieldSet Width="col-6">
+      <label for="trailLocation" class="fw-bold text-secondary">Location</label>
+      <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
+    </FormFieldSet>
   </FormSection>
   <div class="row">
     <div class="offset-4 col-8 text-right">
