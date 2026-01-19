@@ -36,6 +36,46 @@
     </FormFieldSet>
   </FormSection>
 
+  <FormSection Title="Route Instructions"
+    HelpText="Route instructions are the guide for the trail. This helps hikers new to the trail stay on track.">
+    @{ var i = 0;}
+    @foreach (var routeInstruction in _trail.Route)
+    {
+      routeInstruction.Stage = ++i;
+
+      <div class="row">
+        <div class="col-2">
+          <div class="form-group">
+            <label class="font-weight-bold text-secondary">Stage</label>
+            <p>@routeInstruction.Stage</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label for="routeInstructionDescription-@(i)" class="font-weight-bold text-secondary">Description</label>
+            <InputText @bind-Value="routeInstruction.Description" class="form-control" id=@($"routeInstructionDescription-{i}") />
+          </div>
+        </div>
+
+        <div class="col-1 d-flex mt-3">
+          <button class="btn btn-link" type="button" @onclick="@(() => _trail.Route.Remove(routeInstruction))">
+            <i class="bi bi-x-circle-fill text-danger"></i>
+          </button>
+        </div>
+      </div>
+    }
+
+    <div class="row">
+      <div class="col">
+        <button class="btn btn-outline-primary" type="button" 
+          @onclick="@(() => _trail.Route.Add(new TrailDto.RouteInstruction()))">
+            <i class="bi bi-plus-square-fill"></i> Add Instruction
+        </button>
+      </div>
+    </div>
+
+  </FormSection>
+
   <div class="row">
     <div class="offset-4 col-8 text-right">
       <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new())">Reset</button>
