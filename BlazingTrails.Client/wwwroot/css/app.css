@@ -19,7 +19,8 @@ a:hover {
 
 .navbar {
   border-bottom: 2px solid var(--brand);
-  background: linear-gradient(90deg, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0) 100%),
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 1) 5%, rgba(255, 255, 255, 0) 100%),
     url("../images/navbar-bg.jpg") no-repeat center;
   background-size: cover;
 }
@@ -70,4 +71,22 @@ a:hover {
   position: absolute;
   right: 0.75rem;
   top: 0.5rem;
+}
+
+.validation-message {
+  color: red;
+}
+
+input.invalid,
+textarea.invalid,
+select.invalid {
+  border-color: red;
+  border-width: 2px;
+}
+
+input.valid.modified,
+text.valid.modified,
+select.valid.modified {
+  border-color: green;
+  border-width: 2px;
 }
