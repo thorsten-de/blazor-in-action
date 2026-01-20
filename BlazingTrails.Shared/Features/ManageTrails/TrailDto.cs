@@ -20,6 +20,9 @@ public class TrailDto
     }
 }
 
+/// <summary>
+/// Validates Trails
+/// </summary>
 public class TrailValidator : AbstractValidator<TrailDto>
 {
     public TrailValidator()
@@ -29,5 +32,20 @@ public class TrailValidator : AbstractValidator<TrailDto>
         RuleFor(x => x.Location).NotEmpty().WithMessage("Please enter a location");
         RuleFor(x => x.Length).GreaterThan(0).WithMessage("Please enter a length.");
         RuleFor(x => x.Route).NotEmpty().WithMessage("Please add a route instruction");
+
+        // Use RouteInstructionValidator to validate every route instruction in our trail
+        RuleForEach(x => x.Route).SetValidator(new RouteInstructionValidator());
+    }
+}
+
+/// <summary>
+/// Validates RouteInstructions
+/// </summary>
+public class RouteInstructionValidator : AbstractValidator<TrailDto.RouteInstruction>
+{
+    public RouteInstructionValidator()
+    {
+        RuleFor(x => x.Stage).NotEmpty().WithMessage("Please enter a stage");
+        RuleFor(x => x.Description).NotEmpty().WithMessage("Please enter a description");
     }
 }
