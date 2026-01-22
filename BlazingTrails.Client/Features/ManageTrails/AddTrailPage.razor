@@ -1,4 +1,5 @@
 @page "/add-trail"
+@inject IMediator Mediator
 
 <PageTitle>Add Trail - Blazing Trails</PageTitle>
 
@@ -10,6 +11,18 @@
 </nav>
 
 <h3 class="mt-5 mb-4">Add a trail</h3>
+
+@if (_submitSuccesful){
+  <div class="alert alert-success">
+    <i class="bi bi-check-circle-fill" />
+    Your trail has been submitted successfully!
+  </div>
+} else if (_errorMessage is not null) {
+  <div class="alert alert-danger">
+    <i class="bi bi-x-circle-fill" />
+    @_errorMessage
+  </div>
+}
 
 <EditForm Model="_trail" OnValidSubmit="SubmitForm">
   <FluentValidationValidator />
@@ -93,8 +106,20 @@
 
 @code {
   private TrailDto _trail = new();
+  private bool _submitSuccesful;
+  private string? _errorMessage;
 
   private async Task SubmitForm(){
-    Console.WriteLine("Submit...");
+    var response = await Mediator.Send(new AddTrailRequest(_trail));
+
+    if (response.TrailId < 0){
+      _errorMessage = "There was a problem saving your trail.";
+      _submitSuccesful = false;
+      return;
+    }
+
+    _trail = new ();
+    _errorMessage = null;
+    _submitSuccesful = true;
   }
 }
