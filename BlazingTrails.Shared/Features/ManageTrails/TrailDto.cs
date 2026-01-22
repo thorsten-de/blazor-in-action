@@ -10,7 +10,7 @@ public class TrailDto
     public string Location { get; set; } = "";
     public int TimeInMinutes { get; set; }
     public int Length { get; set; }
-    public List<RouteInstruction> Route { get; private set; } = [];
+    public List<RouteInstruction> Route { get; init; } = [];
 
     public class RouteInstruction
     {
