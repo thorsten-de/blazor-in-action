@@ -25,19 +25,15 @@ public class AddTrailEndpoint : EndpointBaseAsync.WithRequest<AddTrailRequest>.W
             Description = req.Trail.Description,
             Location = req.Trail.Location,
             TimeInMinutes = req.Trail.TimeInMinutes,
-            Length = req.Trail.Length
+            Length = req.Trail.Length,
+            Route = req.Trail.Route.Select(x => new RouteInstruction
+            {
+                Stage = x.Stage,
+                Description = x.Description,
+            }).ToArray()
         };
 
         await _dbContext.Trails.AddAsync(trail, cancellationToken);
-
-        var routeIntstructions = req.Trail.Route.Select(x => new RouteInstruction
-        {
-            Stage = x.Stage,
-            Description = x.Description,
-            Trail = trail,
-        });
-
-        await _dbContext.RouteInstructions.AddRangeAsync(routeIntstructions, cancellationToken);
         await _dbContext.SaveChangesAsync();
 
         return trail.Id;
