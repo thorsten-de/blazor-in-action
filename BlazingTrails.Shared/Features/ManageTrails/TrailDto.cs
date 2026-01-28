@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using FluentValidation;
 
 namespace BlazingTrails.Shared.Features.ManageTrails;
@@ -30,6 +31,7 @@ public class TrailValidator : AbstractValidator<TrailDto>
         RuleFor(x => x.Description).NotEmpty().WithMessage("Please enter a description");
         RuleFor(x => x.Location).NotEmpty().WithMessage("Please enter a location");
         RuleFor(x => x.Length).GreaterThan(0).WithMessage("Please enter a length.");
+        RuleFor(x => x.TimeInMinutes).GreaterThan(0).WithMessage("Please enter the time for hiking the trail.");
         RuleFor(x => x.Route).NotEmpty().WithMessage("Please add a route instruction");
 
         // Use RouteInstructionValidator to validate every route instruction in our trail
