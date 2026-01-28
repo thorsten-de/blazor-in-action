@@ -13,3 +13,11 @@ When we create the webapi project, we need to tell that we want to use controlle
 as the default has changed to start with a minimal api: `dotnet new webapi --use-controllers ...`
 
 Configure the Project to support a Blazor WebAssembly client: https://www.nuget.org/packages/Microsoft.AspNetCore.Components.WebAssembly.Server
+
+
+## EditContext
+
+We have access to the EditContext and can:
+- perform actions manually like triggering validation
+- hook into events like `OnFieldChanged`
+- plug in a custom CSS class provider

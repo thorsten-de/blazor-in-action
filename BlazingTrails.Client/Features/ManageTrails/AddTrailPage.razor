@@ -1,30 +1,34 @@
 @page "/add-trail"
+@using BlazingTrails.Client.Validation
 @inject IMediator Mediator
 
 <PageTitle>Add Trail - Blazing Trails</PageTitle>
 
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
-    </ol>
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Trail</li>
+  </ol>
 </nav>
 
 <h3 class="mt-5 mb-4">Add a trail</h3>
 
-@if (_submitSuccesful){
+@if (_submitSuccesful)
+{
   <div class="alert alert-success">
     <i class="bi bi-check-circle-fill" />
     Your trail has been submitted successfully!
   </div>
-} else if (_errorMessage is not null) {
+}
+else if (_errorMessage is not null)
+{
   <div class="alert alert-danger">
     <i class="bi bi-x-circle-fill" />
     @_errorMessage
   </div>
 }
 
-<EditForm Model="_trail" OnValidSubmit="SubmitForm">
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
   <FluentValidationValidator />
   <FormSection Title="Basic Details"
     HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
@@ -56,7 +60,9 @@
 
   <FormSection Title="Route Instructions"
     HelpText="Route instructions are the guide for the trail. This helps hikers new to the trail stay on track.">
-    @{ var i = 0;}
+    @{
+      var i = 0;
+    }
     @foreach (var routeInstruction in _trail.Route)
     {
       routeInstruction.Stage = ++i;
@@ -71,7 +77,8 @@
         <div class="col">
           <div class="form-group">
             <label for="routeInstructionDescription-@(i)" class="font-weight-bold text-secondary">Description</label>
-            <InputText @bind-Value="routeInstruction.Description" class="form-control" id=@($"routeInstructionDescription-{i}") />
+            <InputText @bind-Value="routeInstruction.Description" class="form-control"
+              id=@($"routeInstructionDescription-{i}") />
             <ValidationMessage For=@(() => routeInstruction.Description) />
           </div>
         </div>
@@ -86,9 +93,9 @@
 
     <div class="row">
       <div class="col">
-        <button class="btn btn-outline-primary" type="button" 
+        <button class="btn btn-outline-primary" type="button"
           @onclick="@(() => _trail.Route.Add(new TrailDto.RouteInstruction()))">
-            <i class="bi bi-plus-square-fill"></i> Add Instruction
+          <i class="bi bi-plus-square-fill"></i> Add Instruction
         </button>
         <ValidationMessage For="@(() => _trail.Route)" />
       </div>
@@ -108,17 +115,26 @@
   private TrailDto _trail = new();
   private bool _submitSuccesful;
   private string? _errorMessage;
+  private EditContext _editContext = default!;
 
-  private async Task SubmitForm(){
+  protected override void OnInitialized()
+  {
+    _editContext = new EditContext(_trail);
+    _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+  }
+
+  private async Task SubmitForm()
+  {
     var response = await Mediator.Send(new AddTrailRequest(_trail));
 
-    if (response.TrailId < 0){
+    if (response.TrailId < 0)
+    {
       _errorMessage = "There was a problem saving your trail.";
       _submitSuccesful = false;
       return;
     }
 
-    _trail = new ();
+    _trail = new();
     _errorMessage = null;
     _submitSuccesful = true;
   }
