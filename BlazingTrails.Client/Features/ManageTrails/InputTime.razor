@@ -1,0 +1,63 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@inherits InputBase<int>
+
+<div class="input-time">
+    <div>
+        <input type="number" min="0" class="form-control" @onchange="SetHourValue" value="@_hours" />
+        <label>Hours</label>
+    </div>
+    <div>
+        <input type="number" min="0" max="59" class="form-control" @onchange="SetMinuteValue" value="@_minutes" />
+        <label>Minutes</label>
+    </div>
+
+</div>
+
+@code {
+    private int _hours;
+    private int _minutes;
+
+    private void SetHourValue(ChangeEventArgs args)
+    {
+        int.TryParse(args.Value?.ToString(), out _hours);
+        SetCurrentValue();
+    }
+
+    private void SetMinuteValue(ChangeEventArgs args)
+    {
+        int.TryParse(args.Value?.ToString(), out _minutes);
+        SetCurrentValue();
+    }
+
+    private void SetCurrentValue() => CurrentValue = _hours * 60 + _minutes;
+
+    /// <summary>
+    /// In this method, we react when the paramerts are set. We extract the
+    /// hours and minutes components from the CurrentValue if it is set.
+    /// </summary>
+    protected override void OnParametersSet()
+    {
+        if (CurrentValue > 0)
+        {
+            _hours = CurrentValue / 60;
+            _minutes = CurrentValue % 60;
+        }
+    }
+
+    /// <summary>
+    /// We would implement this method if our component has a single HTML input element. We could
+    /// bind this directly to <see cref="CurrentValueAsString"/> property. As HTML inputs work with
+    /// string innput only, Blazor uses this method to convert the string value to the specified
+    /// type of InputBase.
+    /// </summary>
+    /// <param name="value">The string value that is set in the HTML input</param>
+    /// <param name="result">The typed Value for this input component, if parsing succeeded.</param>
+    /// <param name="validationErrorMessage">The error message returned if parsing to the type failed.</param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    protected override bool TryParseValueFromString(string value, [MaybeNullWhen(false)] out int result,
+    [NotNullWhen(false)] out string validationErrorMessage)
+    {
+        throw new NotImplementedException();
+    }
+}
