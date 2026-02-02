@@ -1,0 +1,120 @@
+@using BlazingTrails.Client.Validation
+<EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
+    <FluentValidationValidator />
+    <FormSection Title="Basic Details"
+        HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
+        <FormFieldSet Width="col-6">
+            <label for="trailName" class="fw-bold text-secondary">Name</label>
+            <InputText @bind-Value="_trail.Name" class="form-control" id="trailName" />
+            <ValidationMessage For="@(() => _trail.Name)" />
+        </FormFieldSet>
+        <FormFieldSet>
+            <label for="trailDescription" class="fw-bold text-secondary">Description</label>
+            <InputTextArea @bind-Value="_trail.Description" class="form-control" id="trailDescription" rows="6" />
+            <ValidationMessage For="@(() => _trail.Description)" />
+        </FormFieldSet>
+        <FormFieldSet Width="col-6">
+            <label for="trailLocation" class="fw-bold text-secondary">Location</label>
+            <InputText @bind-Value="_trail.Location" class="form-control" id="trailLocation" />
+            <ValidationMessage For="@(() => _trail.Location)" />
+        </FormFieldSet>
+        <FormFieldSet>
+            <label for="trailImage" class="fw-bold text-secondary">Image</label>
+            <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+        </FormFieldSet>
+    </FormSection>
+
+    <FormSection Title="Difficulty"
+        HelpText="Help other hikers by telling them the length of the trail, so they know how log it might take them.">
+        <FormFieldSet Width="col-3">
+            <label for="trailLength" class="fw-bold text-secondary">Length (km)</label>
+            <InputNumber @bind-Value="_trail.Length" class="form-control" id="trailLength" />
+            <ValidationMessage For="@(() => _trail.Length)" />
+        </FormFieldSet>
+        <FormFieldSet Width="col-5">
+            <label for="trailTime" class="fw-bold text-secondary">Time</label>
+            <InputTime @bind-Value="_trail.TimeInMinutes" id="trailTime" />
+            <ValidationMessage For="@(() => _trail.TimeInMinutes)" />
+        </FormFieldSet>
+    </FormSection>
+
+    <FormSection Title="Route Instructions"
+        HelpText="Route instructions are the guide for the trail. This helps hikers new to the trail stay on track.">
+        @{
+            var i = 0;
+        }
+        @foreach (var routeInstruction in _trail.Route)
+        {
+            routeInstruction.Stage = ++i;
+
+            <div class="row">
+                <div class="col-2">
+                    <div class="form-group">
+                        <label class="font-weight-bold text-secondary">Stage</label>
+                        <p>@routeInstruction.Stage</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="routeInstructionDescription-@(i)"
+                            class="font-weight-bold text-secondary">Description</label>
+                        <InputText @bind-Value="routeInstruction.Description" class="form-control"
+                            id=@($"routeInstructionDescription-{i}") />
+                        <ValidationMessage For=@(() => routeInstruction.Description) />
+                    </div>
+                </div>
+
+                <div class="col-1 d-flex mt-3">
+                    <button class="btn btn-link" type="button" @onclick="@(() => _trail.Route.Remove(routeInstruction))">
+                        <i class="bi bi-x-circle-fill text-danger"></i>
+                    </button>
+                </div>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-outline-primary" type="button"
+                    @onclick="@(() => _trail.Route.Add(new TrailDto.RouteInstruction()))">
+                    <i class="bi bi-plus-square-fill"></i> Add Instruction
+                </button>
+                <ValidationMessage For="@(() => _trail.Route)" />
+            </div>
+        </div>
+
+    </FormSection>
+
+    <div class="row">
+        <div class="offset-4 col-8 text-right">
+            <button class="btn btn-outline-secondary" type="button" @onclick="@(() => _trail = new())">Reset</button>
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private TrailDto _trail = default!;
+    private IBrowserFile? _trailImage;
+    private EditContext _editContext = default!;
+
+    [Parameter, EditorRequired]
+    public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; }
+
+    public void ResetForm()
+    {
+        _trail = new TrailDto();
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
+        _trailImage = null;
+    }
+
+    protected override void OnInitialized()
+    {
+        ResetForm();
+    }
+
+    private void LoadTrailImage(InputFileChangeEventArgs e) =>
+    _trailImage = e.File;
+
+    private async Task SubmitForm() => await OnSubmit(_trail, _trailImage);
+}
