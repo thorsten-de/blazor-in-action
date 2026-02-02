@@ -7,14 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazingTrails.Api.Features.ManageTrails;
 
-public class AddTrailEndpoint : EndpointBaseAsync.WithRequest<AddTrailRequest>.WithResult<int>
+public class AddTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsync.WithRequest<AddTrailRequest>.WithResult<int>
 {
-    private readonly BlazingTrailsContext _dbContext;
-
-    public AddTrailEndpoint(BlazingTrailsContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
 
     [HttpPost(AddTrailRequest.RouteTemplate)]
     public override async Task<int> HandleAsync(AddTrailRequest req, CancellationToken cancellationToken = default)
@@ -33,8 +27,8 @@ public class AddTrailEndpoint : EndpointBaseAsync.WithRequest<AddTrailRequest>.W
             }).ToArray()
         };
 
-        await _dbContext.Trails.AddAsync(trail, cancellationToken);
-        await _dbContext.SaveChangesAsync();
+        await dbContext.Trails.AddAsync(trail, cancellationToken);
+        await dbContext.SaveChangesAsync();
 
         return trail.Id;
     }

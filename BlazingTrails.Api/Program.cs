@@ -1,7 +1,9 @@
+using System.Net.Http.Headers;
 using BlazingTrails.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,11 @@ app.UseHttpsRedirection();
 // Enable to serve the Blazor application
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "images")),
+    RequestPath = new PathString("/Images")
+});
 
 app.MapControllers();
 // If no controller matches the request, serve the index file from the Blazor client
