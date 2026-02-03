@@ -1,0 +1,9 @@
+﻿<div class="alert alert-danger">
+    <i class="bi bi-x-circle-fill" />
+    @Message
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Message { get; set; } = default!;
+}
