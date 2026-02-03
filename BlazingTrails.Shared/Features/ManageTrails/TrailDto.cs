@@ -13,11 +13,28 @@ public class TrailDto
     public int Length { get; set; }
     public List<RouteInstruction> Route { get; init; } = [];
 
+    /// <summary>
+    /// Filename of the optional image
+    /// </summary>
+    public string? Image { get; set; }
+
+    /// <summary>
+    /// Is there any operation performed on the image? 
+    /// </summary>
+    public ImageAction ImageAction { get; set; } = ImageAction.None;
+
     public class RouteInstruction
     {
         public int Stage { get; set; }
         public string Description { get; set; } = "";
     }
+}
+
+public enum ImageAction
+{
+    None,
+    Add,
+    Remove
 }
 
 /// <summary>
