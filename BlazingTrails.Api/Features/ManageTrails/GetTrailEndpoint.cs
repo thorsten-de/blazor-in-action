@@ -1,0 +1,37 @@
+using System;
+using Ardalis.ApiEndpoints;
+using BlazingTrails.Persistence;
+using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace BlazingTrails.Api.Features.ManageTrails;
+
+public class GetTrailEndpoint(BlazingTrailsContext dbContext) :
+    EndpointBaseAsync.WithRequest<int>.WithActionResult<GetTrailRequest.Response>
+{
+    [HttpGet(GetTrailRequest.RouteTemplate)]
+    public override async Task<ActionResult<GetTrailRequest.Response>> HandleAsync(int trailId, CancellationToken cancellationToken = default)
+    {
+        var trail = await dbContext.Trails
+            .Include(x => x.Route)
+            .SingleOrDefaultAsync(x => x.Id == trailId, cancellationToken);
+
+        if (trail is null)
+            return BadRequest("Trail could not be found.");
+
+        var response = new GetTrailRequest.Response(
+            new GetTrailRequest.Trail(trail.Id,
+            trail.Name,
+            trail.Location,
+            trail.Image,
+            trail.TimeInMinutes,
+            trail.Length,
+            trail.Description,
+            trail.Route.Select(r =>
+                new GetTrailRequest.RouteInstruction(r.Id, r.Stage, r.Description)
+            )));
+
+        return Ok(response);
+    }
+}

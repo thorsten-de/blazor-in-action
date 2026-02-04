@@ -100,6 +100,9 @@
     [Parameter, EditorRequired]
     public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; }
 
+    [Parameter]
+    public TrailDto Trail { get; set; }
+
     public void ResetForm()
     {
         _trail = new TrailDto();

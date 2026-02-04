@@ -15,7 +15,7 @@ public record GetTrailRequest(int TrailId) : IRequest<GetTrailRequest.Response>
         string? Image, int TimeInMinutes, int Length, string Description,
         IEnumerable<RouteInstruction> Route);
 
-    public record RouteInstruction(int Id, int State, string Description);
+    public record RouteInstruction(int Id, int Stage, string Description);
 
     /// <summary>
     /// Response returns structured Trail data

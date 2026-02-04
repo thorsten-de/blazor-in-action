@@ -5,7 +5,7 @@ namespace BlazingTrails.Shared.Features.ManageTrails;
 
 public class TrailDto
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public string Location { get; set; } = "";
