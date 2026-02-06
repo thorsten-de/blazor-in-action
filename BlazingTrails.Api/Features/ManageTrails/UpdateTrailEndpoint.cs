@@ -37,6 +37,11 @@ public class UpdateTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseA
         }));
         await image.SaveAsJpegAsync(saveLocation, cancellationToken);
 
+        if (!string.IsNullOrWhiteSpace(trail.Image))
+        {
+            System.IO.File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "images", trail.Image));
+        }
+
         trail.Image = filename;
         await dbContext.SaveChangesAsync(cancellationToken);
 

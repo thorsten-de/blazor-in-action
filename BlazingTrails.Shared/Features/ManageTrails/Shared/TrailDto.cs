@@ -28,6 +28,24 @@ public class TrailDto
         public int Stage { get; set; }
         public string Description { get; set; } = "";
     }
+
+    public void ImportDataFrom(TrailDto other)
+    {
+        this.Name = other.Name;
+        this.Description = other.Description;
+        this.Location = other.Location;
+        this.Length = other.Length;
+        this.TimeInMinutes = other.TimeInMinutes;
+        this.ImageAction = ImageAction.None;
+
+        this.Route.Clear();
+        this.Route.AddRange(other.Route.Select(r => new RouteInstruction
+        {
+            Stage = r.Stage,
+            Description = r.Description
+        }));
+
+    }
 }
 
 public enum ImageAction

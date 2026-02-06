@@ -1,4 +1,5 @@
 @using BlazingTrails.Client.Validation
+
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
     <FormSection Title="Basic Details"
@@ -20,7 +21,20 @@
         </FormFieldSet>
         <FormFieldSet>
             <label for="trailImage" class="fw-bold text-secondary">Image</label>
-            <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+            @if (string.IsNullOrWhiteSpace(_trail.Image))
+            {
+              <InputFile OnChange="LoadTrailImage" class="form-control-file" id="trailImage" accept=".png,.jpg,.jpeg" />
+            }
+            else
+            {
+              <div class="card bg-dark text-white">
+                <img src="images/@_trail.Image" alt="image for '@_trail.Name'">
+                <div class="card-img-overlay">
+                  <button class="btn btn-danger btn sm" type="button" @onclick="RemoveTrailImage"><i class="bi bi-trash"></i> Remove</button>
+                </div>
+
+              </div>
+            }
         </FormFieldSet>
     </FormSection>
 
@@ -101,7 +115,19 @@
     public Func<TrailDto, IBrowserFile?, Task> OnSubmit { get; set; }
 
     [Parameter]
-    public TrailDto Trail { get; set; }
+    public TrailDto? Trail { get; set; }
+    
+    protected override void OnParametersSet()
+    {
+        ResetForm();
+
+        if (Trail is not null)
+        {
+          _trail.ImportDataFrom(Trail);
+          _trail.Id = Trail.Id;
+          _trail.Image = Trail.Image;
+        }
+    }
 
     public void ResetForm()
     {
@@ -116,8 +142,16 @@
         ResetForm();
     }
 
-    private void LoadTrailImage(InputFileChangeEventArgs e) =>
-    _trailImage = e.File;
+    private void LoadTrailImage(InputFileChangeEventArgs e)
+    {
+      _trailImage = e.File;
+      _trail.ImageAction = ImageAction.Add;
+    }
+
+    private void RemoveTrailImage() {
+      _trail.Image = null;
+      _trail.ImageAction = ImageAction.Remove;
+    }
 
     private async Task SubmitForm() => await OnSubmit(_trail, _trailImage);
 }
