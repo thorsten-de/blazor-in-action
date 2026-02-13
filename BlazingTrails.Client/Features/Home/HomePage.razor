@@ -1,5 +1,5 @@
 ﻿@page "/"
-@inject HttpClient Http
+@inject IMediator Mediator
 
 <PageTitle>Blazing Trails</PageTitle>
 
@@ -30,7 +30,8 @@ else
   {
     try
     {
-      _trails = await Http.GetFromJsonAsync<IEnumerable<Trail>>("trails/trail-data.json");
+        var response = await Mediator.Send(new GetTrailsRequest());
+        _trails = response.Trails.Select(Trail.FromRequest);
     }
     catch (HttpRequestException ex)
     {
