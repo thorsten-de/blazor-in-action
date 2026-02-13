@@ -29,12 +29,33 @@ else if (!_searchResults.Any())
 else
 {
     <TrailDetails Trail="_selectedTrail" />
-    <div class="grid">
-        @foreach (var trail in _searchResults)
-        {
-            <TrailCard trail="trail" OnSelected="HandleTrailSelected" />
-        }
-    </div>
+    <ViewSwitcher Items="_searchResults" Context="trail">
+      <GridTemplate>
+        <TrailCard trail="trail" OnSelected="HandleTrailSelected" />
+      </GridTemplate>
+      <HeaderTemplate>
+        <th>Name</th>
+        <th>Location</th>
+        <th>Length</th>
+        <th>Time</th>
+        <th></th>
+      </HeaderTemplate>
+      <RowTemplate>
+                <th scope="col">@trail.Name</th>
+                <td>@trail.Location</td>
+                <td>@trail.Length km</td>
+                <td>@trail.TimeFormatted</td>
+                <td class="text-end">
+                  <button class="btn btn-primary" title="View" @onclick="@(() => HandleTrailSelected(trail))">
+                    <i class="bi bi-binoculars"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" title="Edit"
+                          @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </td>
+      </RowTemplate>
+    </ViewSwitcher>
 }
 
 @code {
