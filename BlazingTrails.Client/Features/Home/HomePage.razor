@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject IMediator Mediator
+@inject NavigationManager NavManager
 
 <PageTitle>Blazing Trails</PageTitle>
 
@@ -19,12 +20,48 @@ else
         Do you have an awesome trail to share with us? <a href="add-trail">Add it here</a>.
       </p>
     </div>
-    <div class="grid">
-      @foreach (var trail in _trails)
-      {
-        <TrailCard trail="trail" OnSelected="HandleTrailSelected" />
-      }
-    </div>
+    <ViewSwitcher>
+      <GridTemplate>
+        <div class="grid">
+          @foreach (var trail in _trails)
+          {
+            <TrailCard trail="trail" OnSelected="HandleTrailSelected" />
+          }
+        </div>
+      </GridTemplate>
+      <TableTemplate>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Location</th>
+              <th>Length</th>
+              <th>Time</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var trail in _trails) {
+              <tr>
+                <th scope="col">@trail.Name</th>
+                <td>@trail.Location</td>
+                <td>@trail.Length km</td>
+                <td>@trail.TimeFormatted</td>
+                <td class="text-end">
+                  <button class="btn btn-primary" title="View" @onclick="@(() => HandleTrailSelected(trail))">
+                    <i class="bi bi-binoculars"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" title="Edit"
+                          @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </TableTemplate>
+    </ViewSwitcher>
   }
   else
   {

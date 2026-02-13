@@ -1,0 +1,31 @@
+::deep .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 288px);
+  column-gap: 123px;
+  row-gap: 75px;
+  /* border: 2px solid red; */
+}
+
+::deep table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #212529;
+  margin-bottom: 1rem;
+  /* border: 2px solid red; */
+}
+
+::deep table th,
+::deep table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+}
+
+::deep thead tr th {
+  border-bottom: 4px solid var(--brand);
+  border-top: none;
+}
+
+::deep tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+  /* border: 2px solid red; */
+}
