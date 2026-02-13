@@ -19,7 +19,7 @@ public class TrailDto
     public string? Image { get; set; }
 
     /// <summary>
-    /// Is there any operation performed on the image? 
+    /// Is there any operation performed on the image?
     /// </summary>
     public ImageAction ImageAction { get; set; } = ImageAction.None;
 
