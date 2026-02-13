@@ -1,4 +1,6 @@
-﻿<div class="card shadow" style="width: 18rem;">
+﻿@inject NavigationManager Navmanager
+
+<div class="card shadow" style="width: 18rem;">
     <img class="card-img-top" alt="@Trail.Name"
          src="@(!string.IsNullOrWhiteSpace(Trail.Image) ? $"images/{Trail.Image}" : "https://dummyimage.com/286x190.jpg?text=No+Image+For+Trail")">
     <div class="card-body">
@@ -17,9 +19,15 @@
                 @Trail.Length km
             </span>
         </div>
+        <button class="btn btn-outline-secondary float-end" title="Edit"
+                @onclick="@(() => Navmanager.NavigateTo($"/edit-trail/{Trail.Id}"))">
+            <i class="bi bi-pencil-square"></i>
+        </button>
         <button class="btn btn-primary" title="View" @onclick="@(async () => await OnSelected.InvokeAsync(Trail))">
             <i class="bi bi-binoculars"></i>
         </button>
+
+
     </div>
 </div>
 
