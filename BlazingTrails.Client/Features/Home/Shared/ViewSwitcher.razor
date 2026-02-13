@@ -1,4 +1,6 @@
-﻿<div>
+﻿@typeparam TItem
+
+<div>
   <div class="mb-3 text-end">
     <div class="btn-group">
       <button @onclick="@(() => _mode = ViewMode.Grid)" 
@@ -16,23 +18,48 @@
 
   @switch (_mode) {
     case ViewMode.Grid:
-      @GridTemplate;
+      <div class="grid">
+        @foreach (var item in Items)
+        {
+          @GridTemplate(item);
+        }
+      </div>
       break;
     case ViewMode.Table:
-      @TableTemplate;
+      <table>
+        <thead>
+          <tr>
+            @HeaderTemplate
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var item in Items) {
+            <tr>
+              @RowTemplate(item)
+            </tr>
+          }
+        </tbody>
+
+      </table>
       break;
   }
 </div>
 
 
-@code {
+@code {  
   private ViewMode _mode = ViewMode.Grid;
 
   [Parameter, EditorRequired]
-  public RenderFragment GridTemplate { get; set; } = default!;
+  public IEnumerable<TItem> Items { get; set; }
+  
+  [Parameter, EditorRequired]
+  public RenderFragment<TItem> GridTemplate { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public RenderFragment TableTemplate { get; set; } = default!;
+  public RenderFragment HeaderTemplate { get; set; } = default!;
+ 
+  [Parameter, EditorRequired]
+  public RenderFragment<TItem> RowTemplate { get; set; } = default!;
 
 
   private enum ViewMode
