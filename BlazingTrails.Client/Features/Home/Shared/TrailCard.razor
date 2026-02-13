@@ -1,5 +1,6 @@
 ﻿<div class="card shadow" style="width: 18rem;">
-    <img src="@Trail.Image" class="card-img-top" alt="@Trail.Name">
+    <img class="card-img-top" alt="@Trail.Name"
+         src="@(!string.IsNullOrWhiteSpace(Trail.Image) ? $"images/{Trail.Image}" : "https://dummyimage.com/286x190.jpg?text=No+Image+For+Trail")">
     <div class="card-body">
         <h5 class="card-title">@Trail.Name</h5>
         <h6 class="card-subtitle mb-3 text-muted">
@@ -25,7 +26,7 @@
 @code {
     [Parameter, EditorRequired]
     public Trail Trail { get; set; } = default!;
-    
+
     [Parameter, EditorRequired]
     public EventCallback<Trail> OnSelected { get; set; }
 }
