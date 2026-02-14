@@ -30,7 +30,7 @@
         if (firstRender)
         {
             _routeMapModule = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./_content/BlazingTrails.ComponentLibrary/Map/RouteMap.razor.js");
+                "./_content/BlazingTrails.ComponentLibrary/Map/RouteMap.razor.js?v=1");
             await _routeMapModule.InvokeVoidAsync("initialize", _map);
         }
     }

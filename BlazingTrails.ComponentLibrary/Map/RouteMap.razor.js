@@ -1,5 +1,5 @@
-export function initialize(hostElemnt) {
-  hostElemnt.map = L.map(hostElemnt).setView([51.7, 0.1], 3);
+export function initialize(hostElement) {
+  hostElement.map = L.map(hostElement).setView([51.7, 0.1], 7);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
@@ -8,17 +8,17 @@ export function initialize(hostElemnt) {
     opacity: 0.75,
   }).addTo(hostElement.map);
 
-  hostElemnt.waypoints = [];
-  hostElemnt.lines = [];
+  hostElement.waypoints = [];
+  hostElement.lines = [];
 
-  hostElemnt.map.on("click", (e) => {
+  hostElement.map.on("click", (e) => {
     let waypoint = L.marker(e.latlng);
-    waypoint.addTo(hostElemnt.map);
-    hostElemnt.waypoints.push(waypoint);
+    waypoint.addTo(hostElement.map);
+    hostElement.waypoints.push(waypoint);
     let line = L.polyline(
-      hostElemnt.waypoints.map((m) => m.getLatLng()),
+      hostElement.waypoints.map((m) => m.getLatLng()),
       { color: "var(--brand)" },
-    ).addTo(hostElemnt.map);
-    hostElemnt.lines.push(line);
+    ).addTo(hostElement.map);
+    hostElement.lines.push(line);
   });
 }
