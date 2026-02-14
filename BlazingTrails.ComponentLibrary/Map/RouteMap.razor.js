@@ -1,4 +1,4 @@
-export function initialize(hostElement) {
+export function initialize(hostElement, routeMapComponent) {
   hostElement.map = L.map(hostElement).setView([51.7, 0.1], 7);
 
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -20,6 +20,8 @@ export function initialize(hostElement) {
       { color: "var(--brand)" },
     ).addTo(hostElement.map);
     hostElement.lines.push(line);
+
+    routeMapComponent.invokeMethodAsync("WaypointAdded", e.latlng.lat, e.latlng.lng);
   });
 }
 

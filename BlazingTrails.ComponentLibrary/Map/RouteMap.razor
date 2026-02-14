@@ -1,6 +1,7 @@
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
 @implements IAsyncDisposable
+@implements IDisposable
 
 <div class="map-wrapper">
   <div class="controls">
@@ -12,6 +13,11 @@
 </div>
 
 @code {
+  /// <summary>
+  /// The reference for our RouteMap to pass into JS functions
+  /// that call methods on our razor component.
+  /// </summary>
+  private DotNetObjectReference<RouteMap> _routeMapReference;
   private ElementReference _map;
   private IJSObjectReference? _routeMapModule;
 
@@ -36,7 +42,13 @@
     {
       _routeMapModule = await JS.InvokeAsync<IJSObjectReference>("import",
           "./_content/BlazingTrails.ComponentLibrary/Map/RouteMap.razor.js?v=1");
-      await _routeMapModule.InvokeVoidAsync("initialize", _map);
+
+      // Create an object reference for our component
+      _routeMapReference = DotNetObjectReference.Create(this);
+
+      // Pass our components object reference to the js module, so it can call us back
+      await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference);
+
     }
   }
 
@@ -57,4 +69,21 @@
     var message = await _routeMapModule.InvokeAsync<string>("deleteLastWaypoint", _map);
     Console.WriteLine(message ?? "No waypoints to delete.");
   }
+
+  /// <summary>
+  /// This method is called from our JS module when a new Marker is dropped on the map.
+  /// We are going to show this information for now, but will include a new waypoint
+  /// to our route in the future.
+  /// </summary>
+  [JSInvokable]    
+  public void WaypointAdded(decimal latitude, decimal longitude) 
+    => Console.WriteLine($"Added Waypoint with latitude={latitude} and longitude {longitude}");
+
+  /// <summary>
+  /// Cleans up the object reference when our component is destroyed.
+  /// </summary>
+  void IDisposable.Dispose()
+    {
+        _routeMapReference?.Dispose();
+    }
 }
