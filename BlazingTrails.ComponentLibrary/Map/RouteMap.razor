@@ -3,45 +3,58 @@
 @implements IAsyncDisposable
 
 <div class="map-wrapper">
-    <div style="height:@Height;width:@Width;" @ref="_map"></div>
+  <div class="controls">
+    <button class="btn btn-secondary" @onclick="DeleteLastWaypoint" type="button" title="Delete the last waypoint">
+      <i class="bi bi-trash"></i> Remove Last Waypoint
+    </button>
+  </div>
+  <div style="height:@Height;width:@Width;" @ref="_map"></div>
 </div>
 
 @code {
-    private ElementReference _map;
-    private IJSObjectReference? _routeMapModule;
+  private ElementReference _map;
+  private IJSObjectReference? _routeMapModule;
 
-    [Parameter] public string Height { get; set; } = "500px";
-    [Parameter] public string Width { get; set; } = "1000px";
+  [Parameter] public string Height { get; set; } = "500px";
+  [Parameter] public string Width { get; set; } = "1000px";
 
-    /// <summary>
-    /// We use OnAfterRenderAsync to load the routeMap module and capture
-    /// a reference to it when we render our component for the first time.
-    /// <para>
-    /// We do it here because the DOM has to be in place to be operated
-    /// from our js code. We load the js file on demand, that resides in
-    /// the given path. Then, we can call initialized on the module via
-    /// <c>InvokeVoidAsync</c>, which calls a js function without a return
-    /// value.
-    /// </para>
-    /// </summary>
-    /// <param name="firstRender"></param>
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+  /// <summary>
+  /// We use OnAfterRenderAsync to load the routeMap module and capture
+  /// a reference to it when we render our component for the first time.
+  /// <para>
+  /// We do it here because the DOM has to be in place to be operated
+  /// from our js code. We load the js file on demand, that resides in
+  /// the given path. Then, we can call initialized on the module via
+  /// <c>InvokeVoidAsync</c>, which calls a js function without a return
+  /// value.
+  /// </para>
+  /// </summary>
+  /// <param name="firstRender"></param>
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
     {
-        if (firstRender)
-        {
-            _routeMapModule = await JS.InvokeAsync<IJSObjectReference>("import",
-                "./_content/BlazingTrails.ComponentLibrary/Map/RouteMap.razor.js?v=1");
-            await _routeMapModule.InvokeVoidAsync("initialize", _map);
-        }
+      _routeMapModule = await JS.InvokeAsync<IJSObjectReference>("import",
+          "./_content/BlazingTrails.ComponentLibrary/Map/RouteMap.razor.js?v=1");
+      await _routeMapModule.InvokeVoidAsync("initialize", _map);
     }
+  }
 
-    /// <summary>
-    /// When the Component gets destroyed, we dispose our reference
-    /// to the js module.
-    /// </summary>
-    async ValueTask IAsyncDisposable.DisposeAsync()
-    {
-        if (_routeMapModule is not null)
-            await _routeMapModule.DisposeAsync();
-    }
+  /// <summary>
+  /// When the Component gets destroyed, we dispose our reference
+  /// to the js module.
+  /// </summary>
+  async ValueTask IAsyncDisposable.DisposeAsync()
+  {
+    if (_routeMapModule is not null)
+      await _routeMapModule.DisposeAsync();
+  }
+
+  public async Task DeleteLastWaypoint()
+  {
+    if (_routeMapModule is null) return;
+
+    var message = await _routeMapModule.InvokeAsync<string>("deleteLastWaypoint", _map);
+    Console.WriteLine(message ?? "No waypoints to delete.");
+  }
 }

@@ -22,3 +22,18 @@ export function initialize(hostElement) {
     hostElement.lines.push(line);
   });
 }
+
+export function deleteLastWaypoint(hostElement) {
+  if (hostElement.waypoints.length > 0) {
+    let lastWaypoint = hostElement.waypoints.pop();
+    hostElement.map.removeLayer(lastWaypoint);
+
+    if (hostElement.lines.length > 0) {
+      let lastLine = hostElement.lines.pop();
+      lastLine.remove(hostElement.map);
+
+      let pos = lastWaypoint.getLatLng();
+      return `Deleted waypoint with latitude ${pos.lat} and longitude ${pos.lng}`;
+    }
+  }
+}
