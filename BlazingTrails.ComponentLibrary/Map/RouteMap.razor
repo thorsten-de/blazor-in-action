@@ -24,6 +24,21 @@
   [Parameter] public string Height { get; set; } = "500px";
   [Parameter] public string Width { get; set; } = "1000px";
 
+  [Parameter]
+  public List<LatLong> Waypoints { get; set; } = [];
+
+  /// <summary>
+  /// Notifies that a waypoint is added
+  /// </summary>
+  [Parameter]
+  public EventCallback<LatLong> OnWaypointAdded { get; set; }
+
+  /// <summary>
+  /// Notifies that a waypint is deleted
+  /// </summary>
+  [Parameter]
+  public EventCallback<LatLong> OnWaypointDeleted { get; set; }
+
   /// <summary>
   /// We use OnAfterRenderAsync to load the routeMap module and capture
   /// a reference to it when we render our component for the first time.
@@ -47,7 +62,7 @@
       _routeMapReference = DotNetObjectReference.Create(this);
 
       // Pass our components object reference to the js module, so it can call us back
-      await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference);
+      await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference, Waypoints);
 
     }
   }
@@ -62,12 +77,15 @@
       await _routeMapModule.DisposeAsync();
   }
 
+  /// <summary>
+  /// Deletes the last set waypoint from your Route
+  /// </summary>
   public async Task DeleteLastWaypoint()
   {
     if (_routeMapModule is null) return;
 
-    var message = await _routeMapModule.InvokeAsync<string>("deleteLastWaypoint", _map);
-    Console.WriteLine(message ?? "No waypoints to delete.");
+    var waypoint = await _routeMapModule.InvokeAsync<LatLong>("deleteLastWaypoint", _map);
+    await OnWaypointDeleted.InvokeAsync(waypoint);
   }
 
   /// <summary>
@@ -75,15 +93,15 @@
   /// We are going to show this information for now, but will include a new waypoint
   /// to our route in the future.
   /// </summary>
-  [JSInvokable]    
-  public void WaypointAdded(decimal latitude, decimal longitude) 
-    => Console.WriteLine($"Added Waypoint with latitude={latitude} and longitude {longitude}");
+  [JSInvokable]
+  public async Task WaypointAdded(decimal latitude, decimal longitude)
+    => await OnWaypointAdded.InvokeAsync(new LatLong(latitude, longitude));
 
   /// <summary>
   /// Cleans up the object reference when our component is destroyed.
   /// </summary>
   void IDisposable.Dispose()
-    {
-        _routeMapReference?.Dispose();
-    }
+  {
+    _routeMapReference?.Dispose();
+  }
 }

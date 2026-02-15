@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using FluentValidation;
 
 namespace BlazingTrails.Shared.Features.ManageTrails;
@@ -14,6 +13,11 @@ public class TrailDto
     public List<RouteInstruction> Route { get; init; } = [];
 
     /// <summary>
+    /// The waypoints defining our trail
+    /// </summary>
+    public List<WaypointDto> Waypoints { get; set; } = [];
+
+    /// <summary>
     /// Filename of the optional image
     /// </summary>
     public string? Image { get; set; }
@@ -22,6 +26,11 @@ public class TrailDto
     /// Is there any operation performed on the image?
     /// </summary>
     public ImageAction ImageAction { get; set; } = ImageAction.None;
+
+    /// <summary>
+    /// A waypoint coordinate
+    /// </summary>
+    public record WaypointDto(decimal Latitude, decimal Longitude);
 
     public class RouteInstruction
     {
