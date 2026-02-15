@@ -1,5 +1,4 @@
 @using BlazingTrails.Client.Validation
-@using BlazingTrails.ComponentLibrary.Map
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
@@ -56,8 +55,8 @@
 
         <FormSection Title="Route Instructions"
                      HelpText="Route instructions are the guide for the trail. This helps hikers new to the trail stay on track.">
-            <RouteMap Width="100%" />
-
+            <InputRouteMap @bind-Value="_trail.Waypoints" />
+            <ValidationMessage For="@(() => _trail.Waypoints)" />
         </FormSection>
 
         <div class="row">

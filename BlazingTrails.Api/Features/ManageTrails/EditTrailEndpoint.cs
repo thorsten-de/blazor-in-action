@@ -13,7 +13,7 @@ public class EditTrailEndpoint(BlazingTrailsContext dbContext) :
     public override async Task<ActionResult<bool>> HandleAsync(EditTrailRequest request, CancellationToken cancellationToken = default)
     {
         var trail = await dbContext.Trails
-            .Include(x => x.Route)
+            .Include(x => x.Waypoints)
             .SingleOrDefaultAsync(x => x.Id == request.Trail.Id, cancellationToken);
 
         if (trail is null)

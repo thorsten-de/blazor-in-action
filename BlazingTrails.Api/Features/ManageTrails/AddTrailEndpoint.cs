@@ -20,11 +20,7 @@ public class AddTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsyn
             Location = req.Trail.Location,
             TimeInMinutes = req.Trail.TimeInMinutes,
             Length = req.Trail.Length,
-            Route = req.Trail.Route.Select(x => new RouteInstruction
-            {
-                Stage = x.Stage,
-                Description = x.Description,
-            }).ToArray()
+            Waypoints = req.Trail.Waypoints.Select(Waypoint.FromDto).ToList()
         };
 
         await dbContext.Trails.AddAsync(trail, cancellationToken);

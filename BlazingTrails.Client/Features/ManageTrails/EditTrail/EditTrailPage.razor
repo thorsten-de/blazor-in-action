@@ -55,13 +55,9 @@ else
             _trail.Image = response.Trail.Image;
             _trail.Length = response.Trail.Length;
             _trail.TimeInMinutes = response.Trail.TimeInMinutes;
-            _trail.Route.Clear();
-            _trail.Route.AddRange(response.Trail.Route
-            .Select(r => new TrailDto.RouteInstruction
-            {
-                Stage = r.Stage,
-                Description = r.Description
-            }));
+            _trail.Waypoints.Clear();
+            _trail.Waypoints.AddRange(response.Trail.Waypoints
+            .Select(r => new TrailDto.WaypointDto(r.Latitude, r.Longitude)));
         }
         else
         {

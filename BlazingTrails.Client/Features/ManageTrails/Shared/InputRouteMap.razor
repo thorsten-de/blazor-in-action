@@ -3,7 +3,7 @@
 @inherits InputBase<List<TrailDto.WaypointDto>>
 
 <div class="@CssClass">
-    <RouteMap Width="100%" Waypoints="_waypoints" />
+    <RouteMap Width="100%" Waypoints="_waypoints" OnWaypointAdded="AddWaypoint" OnWaypointDeleted="DeleteWaypoint" />
 </div>
 
 @code {

@@ -12,7 +12,7 @@ public class GetTrailsEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsy
     public override async Task<GetTrailsRequest.Response> HandleAsync(int request, CancellationToken cancellationToken = default)
     {
         var trails = await dbContext.Trails
-            .Include(x => x.Route)
+            .Include(x => x.Waypoints)
             .ToListAsync(cancellationToken);
 
         var response = new GetTrailsRequest
