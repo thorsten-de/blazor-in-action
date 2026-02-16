@@ -4,11 +4,14 @@
 @implements IDisposable
 
 <div class="map-wrapper">
-  <div class="controls">
-    <button class="btn btn-secondary" @onclick="DeleteLastWaypoint" type="button" title="Delete the last waypoint">
-      <i class="bi bi-trash"></i> Remove Last Waypoint
-    </button>
-  </div>
+  @if (!IsReadOnly)
+  {
+    <div class="controls">
+      <button class="btn btn-secondary" @onclick="DeleteLastWaypoint" type="button" title="Delete the last waypoint">
+        <i class="bi bi-trash"></i> Remove Last Waypoint
+      </button>
+    </div>
+  }
   <div style="height:@Height;width:@Width;" @ref="_map"></div>
 </div>
 
@@ -21,11 +24,25 @@
   private ElementReference _map;
   private IJSObjectReference? _routeMapModule;
 
+  /// <summary>
+  /// The height definition of the map element
+  /// </summary>
   [Parameter] public string Height { get; set; } = "500px";
+
+  /// <summary>
+  /// The width definition of the map element
+  /// </summary>
   [Parameter] public string Width { get; set; } = "1000px";
 
-  [Parameter]
-  public List<LatLong> Waypoints { get; set; } = [];
+  /// <summary>
+  /// The waypoint coordinates to show on the map
+  /// </summary>
+  [Parameter] public List<LatLong> Waypoints { get; set; } = [];
+
+  /// <summary>
+  /// Show the map in readonly-mode
+  /// </summary>
+  [Parameter] public bool IsReadOnly { get; set; } = false;
 
   /// <summary>
   /// Notifies that a waypoint is added
@@ -62,7 +79,7 @@
       _routeMapReference = DotNetObjectReference.Create(this);
 
       // Pass our components object reference to the js module, so it can call us back
-      await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference, Waypoints);
+      await _routeMapModule.InvokeVoidAsync("initialize", _map, _routeMapReference, Waypoints, IsReadOnly);
 
     }
   }

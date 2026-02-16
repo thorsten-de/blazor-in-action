@@ -1,7 +1,7 @@
 // Initializes our module with a Leaflet map and connects events with our 
 // C# component using its reference. If we supply existing waypoints, they
 // are drawn on the map, and the map centers on these.
-export function initialize(hostElement, routeMapComponent, existingWaypoints) {
+export function initialize(hostElement, routeMapComponent, existingWaypoints, isReadOnly) {
   // Initialize Leaflet (L)
   hostElement.map = L.map(hostElement).setView([51.7, 0.1], 7);
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -22,10 +22,12 @@ export function initialize(hostElement, routeMapComponent, existingWaypoints) {
     hostElement.map.fitBounds(waypointsGroup.getBounds().pad(1));
   }
 
-  hostElement.map.on("click", (e) => {
-    addWaypoint(e.latlng);
-    routeMapComponent.invokeMethodAsync("WaypointAdded", e.latlng.lat, e.latlng.lng);
-  });
+  if (!isReadOnly) {
+    hostElement.map.on("click", (e) => {
+      addWaypoint(e.latlng);
+      routeMapComponent.invokeMethodAsync("WaypointAdded", e.latlng.lat, e.latlng.lng);
+    });
+  }
 
   // Adds a marker to the map that represents the waypoint. Markers are 
   // then connected with a polyline

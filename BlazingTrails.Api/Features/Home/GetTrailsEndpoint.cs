@@ -23,7 +23,8 @@ public class GetTrailsEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsy
                 trail.Location,
                 trail.TimeInMinutes,
                 trail.Length,
-                trail.Description
+                trail.Description,
+                trail.Waypoints.Select(wp => new GetTrailsRequest.Waypoint(wp.Latitude, wp.Longitude)).ToList()
             )));
 
         return response;
