@@ -2,6 +2,7 @@ using System.Net.Http.Headers;
 using BlazingTrails.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 
@@ -13,6 +14,18 @@ builder.Services.AddDbContext<BlazingTrailsContext>(options =>
 );
 builder.Services.AddControllers();
 builder.Services.AddValidatorsFromAssemblyContaining<TrailValidator>();
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Auth0:Authority"];
+        options.Audience = builder.Configuration["Auth0:ApiIdentifier"];
+    });
 
 
 var app = builder.Build();
@@ -33,7 +46,12 @@ app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "images")),
     RequestPath = new PathString("/Images")
+
 });
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllers();
 // If no controller matches the request, serve the index file from the Blazor client
