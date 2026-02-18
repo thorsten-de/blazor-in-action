@@ -1,0 +1,24 @@
+@page "/authentication/{action}"
+@using FluentValidation
+@using Microsoft.Extensions.Configuration
+
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
+
+<RemoteAuthenticatorView Action="@Action">
+    <LogOut>
+        @{
+            string authority = Configuration["Auth0:Authority"]!;
+            string clientId = Configuration["Auth0:ClientId"]!;
+
+            Navigation.NavigateTo($"{authority}/v2/logout?client_id={clientId}");
+        }
+    </LogOut>
+</RemoteAuthenticatorView>
+
+@code {
+    [Parameter] public string? Action { get; set; }
+
+    // We must handle logout explicitly, becaouse blazor logs the user out only from the client
+    // application. We also want to terminate the login at the idp.
+}

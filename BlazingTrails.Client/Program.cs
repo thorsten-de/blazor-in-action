@@ -10,4 +10,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AddTrailHandler>());
 
+builder.Services.AddOidcAuthentication(options =>
+{
+    // use the settings provided by the configuration, here the appsettings.json file
+    builder.Configuration.Bind("Auth0", options.ProviderOptions);
+
+    // use the Authorization Code flow
+    options.ProviderOptions.ResponseType = "code";
+});
+
 await builder.Build().RunAsync();

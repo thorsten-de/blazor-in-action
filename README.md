@@ -41,3 +41,20 @@ We have access to the EditContext and can:
 - perform actions manually like triggering validation
 - hook into events like `OnFieldChanged`
 - plug in a custom CSS class provider
+
+
+## Setting up Auth0
+
+We setup Auth0 by:
+- creating a free account, and within we 
+- create a new single-page web application "Blazing Trails Client". We set the Allowed Callback URLs to https://localhost:7085/authentication/login-callback
+- create a new api "Blazing Trails API" with identifier "https://blazingtrails.com/api"
+
+### Customize the claims
+
+We customize the returned claims by adding a Trigger action for Post Login:
+```js
+exports.onExecutePostLogin = async (event, api) => {
+    api.accessToken.setCustomClaim(`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`, event.user.email);
+};
+```
