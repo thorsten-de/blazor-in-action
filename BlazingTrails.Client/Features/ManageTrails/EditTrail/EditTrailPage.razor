@@ -1,4 +1,6 @@
 ﻿@page "/edit-trail/{TrailId:int}"
+@attribute [Authorize]
+
 @using System.ComponentModel
 @inject IMediator Mediator
 
@@ -72,17 +74,20 @@ else
     {
         var response = await Mediator.Send(new EditTrailRequest(trail));
 
-        if (!response.IsSuccess) {
+        if (!response.IsSuccess)
+        {
             _submitSuccessful = false;
             _errorMessage = "There was a problem saving your trail.";
-        } else
+        }
+        else
         {
-           _trail.ImportDataFrom(trail);
+            _trail.ImportDataFrom(trail);
 
             _submitSuccessful = true;
 
-            switch (trail.ImageAction) {
-                case ImageAction.Add:                
+            switch (trail.ImageAction)
+            {
+                case ImageAction.Add:
                     _submitSuccessful = await ProcessImage(trail.Id, image!);
                     break;
                 case ImageAction.Remove:
@@ -90,14 +95,14 @@ else
                     break;
             }
         }
-            
+
         StateHasChanged();
     }
-    
+
     private async Task<bool> ProcessImage(int trailId, IBrowserFile image)
     {
         var imageUploadResponse = await Mediator.Send(new UploadTrailImageRequest(trailId, image));
-        
+
         if (string.IsNullOrWhiteSpace(imageUploadResponse.ImageName))
         {
             _errorMessage = "Trail was saved, but there was a problem uploading the image.";
