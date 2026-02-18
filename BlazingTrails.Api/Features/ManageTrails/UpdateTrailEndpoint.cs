@@ -1,8 +1,8 @@
 using System;
 using Ardalis.ApiEndpoints;
-using BlazingTrails.Client.Features.Home;
 using BlazingTrails.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp;
@@ -13,14 +13,16 @@ namespace BlazingTrails.Api.Features.ManageTrails;
 public class UpdateTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsync
     .WithRequest<int>.WithActionResult<string>
 {
-
-
+    [Authorize]
     [HttpPost(UploadTrailImageRequest.RouteTemplate)]
     public override async Task<ActionResult<string>> HandleAsync([FromRoute] int trailId, CancellationToken cancellationToken = default)
     {
         var trail = await dbContext.Trails.SingleOrDefaultAsync(x => x.Id == trailId, cancellationToken);
         if (trail is null)
             return BadRequest("Trail does not exist");
+
+        if (!trail.Owner.Equals(HttpContext.User.Identity?.Name, StringComparison.OrdinalIgnoreCase))
+            return Unauthorized();
 
         var file = Request.Form.Files.First();
         if (file.Length == 0)

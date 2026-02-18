@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
 using BlazingTrails.Persistence;
 using BlazingTrails.Shared.Features.ManageTrails.EditTrail;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +10,7 @@ namespace BlazingTrails.Api.Features.ManageTrails;
 public class EditTrailEndpoint(BlazingTrailsContext dbContext) :
     EndpointBaseAsync.WithRequest<EditTrailRequest>.WithActionResult<bool>
 {
+    [Authorize]
     [HttpPut(EditTrailRequest.RouteTemplate)]
     public override async Task<ActionResult<bool>> HandleAsync(EditTrailRequest request, CancellationToken cancellationToken = default)
     {
@@ -17,7 +19,10 @@ public class EditTrailEndpoint(BlazingTrailsContext dbContext) :
             .SingleOrDefaultAsync(x => x.Id == request.Trail.Id, cancellationToken);
 
         if (trail is null)
-            return BadRequest("Trail could not be found");
+            return NotFound("Trail could not be found");
+
+        if (!trail.Owner.Equals(HttpContext.User.Identity?.Name, StringComparison.OrdinalIgnoreCase))
+            return Unauthorized();
 
         trail.ImportDataFrom(request.Trail);
 
