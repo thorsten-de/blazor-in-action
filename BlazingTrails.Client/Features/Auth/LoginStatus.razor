@@ -1,0 +1,26 @@
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+
+<div class="container text-end">
+    <AuthorizeView>
+        <Authorized>
+            <div>
+                Hello, @(context.User.Identity?.Name ?? "Unknown Identity")
+                <a href="#" @onclick="BeginSignOut">Log out</a>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <a href="authentication/login">Log in / Sign up</a>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private async Task BeginSignOut(MouseEventArgs args)
+    {
+        // Safeguard the logout action from CSRF attacks by setting some state.
+        // This state will be checked by the logout action.
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}

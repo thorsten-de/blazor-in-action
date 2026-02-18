@@ -17,6 +17,8 @@ builder.Services.AddOidcAuthentication(options =>
 
     // use the Authorization Code flow
     options.ProviderOptions.ResponseType = "code";
+
+    //options.UserOptions.NameClaim = ClaimTypes.Email;
 });
 
 await builder.Build().RunAsync();
