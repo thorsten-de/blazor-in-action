@@ -13,6 +13,7 @@ public class Trail
     public int TimeInMinutes { get; set; }
     public string TimeFormatted => $"{TimeInMinutes / 60}h {TimeInMinutes % 60}m";
     public int Length { get; set; }
+    public required string Owner { get; set; }
     public List<LatLong> Waypoints { get; set; } = [];
 
     public static Trail FromRequest(GetTrailsRequest.Trail x) => new Trail
@@ -21,6 +22,7 @@ public class Trail
         Name = x.Name,
         Image = x.Image ?? "",
         Description = x.Description,
+        Owner = x.Owner,
         Location = x.Location,
         Length = x.Length,
         TimeInMinutes = x.TimeInMinutes,

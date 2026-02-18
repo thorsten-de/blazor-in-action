@@ -13,6 +13,8 @@ public class AddTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsyn
     [HttpPost(AddTrailRequest.RouteTemplate)]
     public override async Task<int> HandleAsync(AddTrailRequest req, CancellationToken cancellationToken = default)
     {
+        // TODO: Get the proper owner
+        string owner = "";
         var trail = new Trail
         {
             Name = req.Trail.Name,
@@ -20,6 +22,7 @@ public class AddTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsyn
             Location = req.Trail.Location,
             TimeInMinutes = req.Trail.TimeInMinutes,
             Length = req.Trail.Length,
+            Owner = owner,
             Waypoints = req.Trail.Waypoints.Select(Waypoint.FromDto).ToList()
         };
 

@@ -50,6 +50,8 @@ public class Trail
     /// </summary>
     public ICollection<Waypoint> Waypoints { get; set; } = default!;
 
+    public required string Owner { get; set; }
+
     /// <summary>
     /// Imports the data from a TrailDto into this Trail entity. This is used when 
     /// we want to update an existing trail with the data from a TrailDto.
