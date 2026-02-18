@@ -17,7 +17,14 @@ else
   {
     <div class="mb-4">
       <p class="font-italic text-center">
-        Do you have an awesome trail to share with us? <a href="add-trail">Add it here</a>.
+        <AuthorizeView>
+          <Authorized>
+            Do you have an awesome trail to share with us? <a href="add-trail">Add it here</a>.
+          </Authorized>
+          <NotAuthorized>
+            Do you have an awesome trail to share with us? Please <a href="authentication/login">log in or sign up</a>.
+          </NotAuthorized>
+        </AuthorizeView>
       </p>
     </div>
     <ViewSwitcher Items="_trails" Context="trail">
@@ -40,10 +47,15 @@ else
           <button class="btn btn-primary" title="View" @onclick="@(() => HandleTrailSelected(trail))">
             <i class="bi bi-binoculars"></i>
           </button>
-          <button class="btn btn-outline-secondary" title="Edit"
-                  @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))">
-            <i class="bi bi-pencil"></i>
-          </button>
+          <AuthorizeView>
+            @if (trail.Owner.Equals(context.User.Identity?.Name, StringComparison.OrdinalIgnoreCase))
+            {
+              <button class="btn btn-outline-secondary" title="Edit"
+                      @onclick="@(() => NavManager.NavigateTo($"/edit-trail/{trail.Id}"))">
+                <i class="bi bi-pencil"></i>
+              </button>
+            }
+          </AuthorizeView>
         </td>
       </RowTemplate>
     </ViewSwitcher>
