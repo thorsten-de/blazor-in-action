@@ -4,12 +4,11 @@ using MediatR;
 
 namespace BlazingTrails.Client.Features.ManageTrails.AddTrail;
 
-public class EditTrailhandler(IHttpClientFactory httpClientFactory) :
+public class EditTrailhandler([FromKeyedServices(Constants.SecureAPIClient)] HttpClient httpClient) :
     IRequestHandler<EditTrailRequest, EditTrailRequest.Response>
 {
     public async Task<EditTrailRequest.Response> Handle(EditTrailRequest request, CancellationToken cancellationToken)
     {
-        var httpClient = httpClientFactory.CreateClient(Constants.SecureAPIClient);
         var response = await httpClient
             .PutAsJsonAsync(EditTrailRequest.RouteTemplate, request, cancellationToken);
 

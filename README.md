@@ -34,6 +34,13 @@ as the default has changed to start with a minimal api: `dotnet new webapi --use
 
 Configure the Project to support a Blazor WebAssembly client: <https://www.nuget.org/packages/Microsoft.AspNetCore.Components.WebAssembly.Server>
 
+### Use KeyedService instead of IHttpClientFactory
+
+As we can use keyed Services in .Net, we don't have to inject the `IHttpClientFactory` anymore to create a named http client. We can just call `.AddAsKeyed()` when we declare our named client in [Program.cs](./BlazingTrails.Client/Program.cs) and inject
+the `[FromKeyedServices("SecureAPIClient")] HttpClient httpClient` where needed. 
+
+See: https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory-keyed-di
+
 ## EditContext
 
 We have access to the EditContext and can:
