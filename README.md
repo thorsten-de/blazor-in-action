@@ -71,3 +71,17 @@ options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Con
 See
 - https://support.auth0.com/center/s/article/opaque-versus-jwt-access-token
 - https://auth0.com/blog/securing-blazor-webassembly-apps/
+
+### Setup Administrator role in Auth0
+
+Now we setup a Role in Auth0 and return the roles as CustomClaims in our Post-Login Trigger:
+```js
+exports.onExecutePostLogin = async (event, api) => {
+    const assignedRoles = (event.authorization || {}).roles;
+    api.accessToken.setCustomClaim('http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name', event.user.email);
+    api.accessToken.setCustomClaim('http://schemas.microsoft.com/ws/2008/06/identity/claims/role', assignedRoles);
+        
+    api.idToken.setCustomClaim('http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress', event.user.email);
+    api.idToken.setCustomClaim('http://schemas.microsoft.com/ws/2008/06/identity/claims/role', assignedRoles);
+};
+```

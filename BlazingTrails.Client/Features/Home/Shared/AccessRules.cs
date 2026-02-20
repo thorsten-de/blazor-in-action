@@ -1,7 +1,6 @@
 using System.Security.Claims;
-using BlazingTrails.Persistence.Model;
 
-namespace BlazingTrails.Api.Features.ManageTrails;
+namespace BlazingTrails.Client.Features.Home;
 
 public static class AccessRules
 {
