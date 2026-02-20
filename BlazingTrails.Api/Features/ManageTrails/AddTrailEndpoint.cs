@@ -16,7 +16,8 @@ public class AddTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsyn
     public override async Task<int> HandleAsync(AddTrailRequest req, CancellationToken cancellationToken = default)
     {
         // TODO: Get the proper owner
-        string owner = "";
+
+        string owner = HttpContext.User.Identity!.Name!;
         var trail = new Trail
         {
             Name = req.Trail.Name,

@@ -10,7 +10,7 @@ using SixLabors.ImageSharp.Processing;
 
 namespace BlazingTrails.Api.Features.ManageTrails;
 
-public class UpdateTrailEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsync
+public class UpdateTrailImageEndpoint(BlazingTrailsContext dbContext) : EndpointBaseAsync
     .WithRequest<int>.WithActionResult<string>
 {
     [Authorize]

@@ -54,7 +54,20 @@ We setup Auth0 by:
 
 We customize the returned claims by adding a Trigger action for Post Login:
 ```js
-exports.onExecutePostLogin = async (event, api) => {
+exports.onExecutePostLogin = async (event, api) => {    
     api.accessToken.setCustomClaim(`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name`, event.user.email);
+        
+    api.idToken.setCustomClaim(`http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`, event.user.email);
 };
 ```
+
+### Setting the Audience in the client
+
+Following the book, we got an **opaque token**. These are in a proprietary format and the recipient must call the server to get the information. To get a self-contained **JWT**, we have to _include the Audience_. This is done in the Client project by adding the Audience to the appsettings.json and configure authentication to use it as additional provider parameter inprogram.cs:
+```cs
+options.ProviderOptions.AdditionalProviderParameters.Add("audience", builder.Configuration["Auth0:Audience"]);
+```
+
+See
+- https://support.auth0.com/center/s/article/opaque-versus-jwt-access-token
+- https://auth0.com/blog/securing-blazor-webassembly-apps/

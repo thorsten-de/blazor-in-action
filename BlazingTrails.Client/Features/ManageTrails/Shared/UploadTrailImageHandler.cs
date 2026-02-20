@@ -1,8 +1,9 @@
+using BlazingTrails.Client;
 using MediatR;
 
 namespace BlazingTrails.Shared.Features.ManageTrails;
 
-public class UploadTrailImageHandler(HttpClient httpClient) : IRequestHandler<UploadTrailImageRequest, UploadTrailImageRequest.Response>
+public class UploadTrailImageHandler(IHttpClientFactory httpClientFactory) : IRequestHandler<UploadTrailImageRequest, UploadTrailImageRequest.Response>
 {
     public async Task<UploadTrailImageRequest.Response> Handle(UploadTrailImageRequest request, CancellationToken cancellationToken)
     {
@@ -11,6 +12,7 @@ public class UploadTrailImageHandler(HttpClient httpClient) : IRequestHandler<Up
         using var content = new MultipartFormDataContent();
         content.Add(new StreamContent(fileContent), "image", request.File.Name);
 
+        var httpClient = httpClientFactory.CreateClient(Constants.SecureAPIClient);
         var response = await httpClient
             .PostAsync(UploadTrailImageRequest.RouteTemplate.Replace("{trailId}", request.TrailId.ToString()),
                 content, cancellationToken);
