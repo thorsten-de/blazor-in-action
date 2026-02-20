@@ -22,7 +22,7 @@ public class GetTrailEndpoint(BlazingTrailsContext dbContext) :
         if (trail is null)
             return NotFound("Trail could not be found.");
 
-        if (!trail.Owner.Equals(HttpContext.User.Identity?.Name, StringComparison.OrdinalIgnoreCase))
+        if (!HttpContext.User.IsEditorOf(trail))
             return Unauthorized();
 
         var response = new GetTrailRequest.Response(
