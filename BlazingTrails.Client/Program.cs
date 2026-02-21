@@ -5,6 +5,7 @@ using BlazingTrails.Shared.Features.ManageTrails;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Security.Claims;
 using BlazingTrails.Client.Features.Auth;
+using BlazingTrails.Client.State;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -32,5 +33,7 @@ builder.Services
             options.UserOptions.NameClaim = ClaimTypes.Email;
         })
     .AddAccountClaimsPrincipalFactory<CustomUserFactory<RemoteUserAccount>>();
+
+builder.Services.AddScoped<AppState>();
 
 await builder.Build().RunAsync();
