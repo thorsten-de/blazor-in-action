@@ -1,8 +1,39 @@
 ﻿@using BlazingTrails.Client.Features.Auth
+@inject AppState AppState
+@implements IDisposable
+
 <nav class="navbar mb-5 shadow">
     <a class="navbar-brand" href="/">
         <img src="images/logo.png" />
     </a>
 </nav>
+<div class="container d-flex justify-content-between">
+  <p>
+    You have <span class="fw-bold badge @(HasFavorites ? "text-bg-primary" : "text-bg-secondary")">@AppState.FavoriteTrails.FavoriteTrails.Count</span>
+    <a href="/favorite-trails">favorite trails</a>
+  </p>
+  <LoginStatus />
+</div>
 
-<LoginStatus />
+
+@code {
+
+  private bool HasFavorites => AppState.FavoriteTrails.FavoriteTrails.Any(); 
+
+  /// <summary>
+  /// On Initialization, we want to get notified whenever the state of the favorites changes.
+  /// When this happens, we say the state of our component has changed and it has to be rerendered.
+  /// </summary>
+  protected override void OnInitialized()
+  {
+    AppState.FavoriteTrails.OnChange += StateHasChanged;
+  }
+
+  /// <summary>
+  /// When the component is disposed, we want to unsubscribe from the event to prevent memory leaks.
+  /// </summary>
+  void IDisposable.Dispose()
+    {
+        AppState.FavoriteTrails.OnChange -= StateHasChanged;
+    }
+}

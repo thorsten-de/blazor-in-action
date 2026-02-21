@@ -45,6 +45,11 @@ a:hover {
   border-color: var(--brand);
 }
 
+.text-bg-primary {
+  background-color: var(--brand) !important;
+  color: white !important;
+}
+
 #blazor-error-ui {
   color-scheme: light only;
   background: lightyellow;
