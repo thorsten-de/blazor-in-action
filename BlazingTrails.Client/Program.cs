@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Security.Claims;
 using BlazingTrails.Client.Features.Auth;
 using BlazingTrails.Client.State;
+using Blazored.LocalStorage;
 
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -35,5 +36,6 @@ builder.Services
     .AddAccountClaimsPrincipalFactory<CustomUserFactory<RemoteUserAccount>>();
 
 builder.Services.AddScoped<AppState>();
+builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();
