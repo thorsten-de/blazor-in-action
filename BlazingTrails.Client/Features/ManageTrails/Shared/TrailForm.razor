@@ -1,7 +1,9 @@
 @using BlazingTrails.Client.Validation
+@inject AppState AppState
 
 <EditForm EditContext="_editContext" OnValidSubmit="SubmitForm">
     <FluentValidationValidator />
+    <FormStateTracker />
     <FormSection Title="Basic Details"
                  HelpText="This information is used to identify the trail and can be searched to help hikers find it.">
         <FormFieldSet Width="col-6">
@@ -68,7 +70,7 @@
     </EditForm>
 
 @code {
-    private TrailDto _trail = default!;
+    private TrailDto _trail = new();
     private IBrowserFile? _trailImage;
     private EditContext _editContext = default!;
 
@@ -80,7 +82,6 @@
 
     protected override void OnParametersSet()
     {
-        ResetForm();
 
         if (Trail is not null)
         {
@@ -88,19 +89,22 @@
             _trail.Id = Trail.Id;
             _trail.Image = Trail.Image;
         }
+        else {
+            _trail = AppState.Trail;
+        }
+        
+        _editContext = new EditContext(_trail);
+        _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
     }
 
     public void ResetForm()
     {
+        AppState.ClearTrail();
+
         _trail = new TrailDto();
+        _trailImage = null;
         _editContext = new EditContext(_trail);
         _editContext.SetFieldCssClassProvider(new BootstrapCssClassProvider());
-        _trailImage = null;
-    }
-
-    protected override void OnInitialized()
-    {
-        ResetForm();
     }
 
     private void LoadTrailImage(InputFileChangeEventArgs e)
