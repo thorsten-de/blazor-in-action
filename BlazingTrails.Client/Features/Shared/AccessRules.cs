@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace BlazingTrails.Client.Features.Home;
+namespace BlazingTrails.Client.Features;
 
 public static class AccessRules
 {

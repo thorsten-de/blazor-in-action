@@ -1,5 +1,5 @@
 using System;
-using BlazingTrails.Client.Features.Home;
+using BlazingTrails.Client.Features;
 using Blazored.LocalStorage;
 
 namespace BlazingTrails.Client.State;

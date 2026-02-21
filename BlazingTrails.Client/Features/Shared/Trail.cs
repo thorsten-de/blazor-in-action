@@ -2,7 +2,7 @@
 using BlazingTrails.ComponentLibrary.Map;
 using BlazingTrails.Shared.Features.Home;
 
-namespace BlazingTrails.Client.Features.Home;
+namespace BlazingTrails.Client.Features;
 
 /// <summary>
 /// Represents a trail as shown on the home page. This is the client-side representation of the trail, which is different 
