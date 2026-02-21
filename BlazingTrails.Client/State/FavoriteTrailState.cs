@@ -33,7 +33,8 @@ public class FavoriteTrailState(ILocalStorageService localStorageService)
     {
         if (_isInitialized) return;
 
-        _favoriteTrails = await localStorageService.GetItemAsync<HashSet<Trail>>(FavoriteTrailsKey) ?? new(Trail.EqualityComparer);
+        var localStorageTrails = await localStorageService.GetItemAsync<List<Trail>>(FavoriteTrailsKey) ?? [];
+        _favoriteTrails = new(localStorageTrails, Trail.EqualityComparer);
         _isInitialized = true;
         NotifyStateHasChanged();
     }
