@@ -90,7 +90,7 @@
             _trail.Image = Trail.Image;
         }
         else {
-            _trail = AppState.Trail;
+            _trail = AppState.NewTrail.Trail;
         }
         
         _editContext = new EditContext(_trail);
@@ -99,7 +99,7 @@
 
     public void ResetForm()
     {
-        AppState.ClearTrail();
+        AppState.NewTrail.Clear();
 
         _trail = new TrailDto();
         _trailImage = null;

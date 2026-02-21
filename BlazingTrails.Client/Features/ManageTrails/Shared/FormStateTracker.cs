@@ -18,14 +18,14 @@ public class FormStateTracker : ComponentBase
     /// and this is done by using property injection with blazor components.
     /// </summary>
     [Inject]
-    public AppState AppState { get; set; }
+    public AppState AppState { get; set; } = null!;
 
     /// <summary>
     /// We use the EditContext to track the state of the form. The EditContext is created by the EditForm component,
     /// and we can access it by using the CascadingParameter attribute, which allows us to receive data from a parent component.
     /// </summary>
     [CascadingParameter]
-    private EditContext CascadedEditContext { get; set; }
+    private EditContext? CascadedEditContext { get; set; }
 
     /// <summary>
     /// When the component is initialized, we subscribe to the OnFieldChanged event of the EditContext, so that we can update the
@@ -50,7 +50,7 @@ public class FormStateTracker : ComponentBase
     {
         if (e.FieldIdentifier.Model is TrailDto trail && trail.Id == 0)
         {
-            AppState.Trail = trail;
+            AppState.NewTrail.Trail = trail;
         }
     }
 }

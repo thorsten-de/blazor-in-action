@@ -1,30 +1,21 @@
 using System;
-using BlazingTrails.Shared.Features.ManageTrails;
 
 namespace BlazingTrails.Client.State;
 
 /// <summary>
-/// Remembers unsaved data for a trail while the user is adding it.
+/// Handles all application state that is shared between multiple components and
+/// should be preserved when navigating between pages
 /// </summary>
 public class AppState
 {
-    private TrailDto _unsavedTrail = new();
 
     /// <summary>
-    /// Unsaved trail data.
+    /// Holds unsaved trail data while the user is adding a new trail.
     /// </summary>
-    public TrailDto Trail
+    public NewTrailState NewTrail { get; }
+
+    public AppState()
     {
-        get => _unsavedTrail;
-        set
-        {
-            _unsavedTrail = value;
-        }
+        NewTrail = new NewTrailState();
     }
-
-    /// <summary>
-    /// Clears the unsaved trail data.
-    /// </summary>
-    public void ClearTrail()
-        => _unsavedTrail = new TrailDto();
 }
