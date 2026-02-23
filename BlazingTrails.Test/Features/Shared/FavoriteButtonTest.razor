@@ -1,0 +1,46 @@
+﻿@using System.Threading.Tasks
+@inherits TestContext
+@code {
+    private readonly Fixture _fixture = new();
+
+    public FavoriteButtonTest()
+    {
+        this.AddBlazoredLocalStorage();
+
+
+        this.Services.AddScoped<AppState>();
+    }
+
+    [Fact]
+    public void RendersAddFavoriteButton_When_TrailsIsNotFavorited()
+    {
+        var testTrail = _fixture.Create<Trail>();
+
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
+
+        cut.MarkupMatches(
+            @<button class:ignore title:regex="^Add">
+                <i class="bi bi-heart"></i>
+            </button>
+        );
+    }
+
+    [Fact]
+    public async Task RendersRemoveFavoriteButton_When_TrailsIsFavorited()
+    {
+        var testTrail = _fixture.Create<Trail>();
+
+        var appState = this.Services.GetRequiredService<AppState>();
+        await appState.FavoriteTrails.AddFavorite(testTrail);
+
+        var cut = Render(@<FavoriteButton Trail="testTrail" />);
+
+        cut.MarkupMatches(
+            @<button class:ignore title:regex="^Remove">
+                <i class="bi bi-heart-fill"></i>
+            </button>
+        );
+    }
+
+
+}
