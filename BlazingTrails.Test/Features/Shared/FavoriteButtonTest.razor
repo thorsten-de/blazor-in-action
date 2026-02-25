@@ -42,5 +42,34 @@
         );
     }
 
+    [Fact]
+    public void AddTrailToFavorites_When_TrailIsNotFavorite()
+    {
+        var testTrail = _fixture.Create<Trail>();
+        var cut = Render(
+            @<FavoriteButton Trail="testTrail" />
+        );
+        var button = cut.Find("button");
 
+        button.Click();
+
+        var appState = this.Services.GetRequiredService<AppState>();
+        Assert.True(appState.FavoriteTrails.IsFavorite(testTrail));
+    }
+
+    [Fact]
+    public async Task RemoveTrailFromFavorites_When_TrailIsFavorite()
+    {
+        var testTrail = _fixture.Create<Trail>();
+        var appState = this.Services.GetRequiredService<AppState>();
+        await appState.FavoriteTrails.AddFavorite(testTrail);
+        var cut = Render(
+            @<FavoriteButton Trail="testTrail" />
+        );
+        var button = cut.Find("button");
+
+        button.Click();
+
+        Assert.False(appState.FavoriteTrails.IsFavorite(testTrail));
+    }
 }
