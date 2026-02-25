@@ -25,4 +25,18 @@
         var editButton = cut.Find("button[title=\"Edit\"]");
         Assert.NotNull(editButton);
     }
+
+    [Fact]
+    public void RendersEditButton_When_UserIsAdmin()
+    {
+        var authorizedUser = "Admin User";
+        _authContext.SetAuthorized(authorizedUser);
+        _authContext.SetRoles("Administrator");
+        var testTrail = _fixture.Create<Trail>();
+
+        var cut = Render(@<TrailCard Trail="testTrail" />);
+
+        var editButton = cut.Find("button[title=\"Edit\"]");
+        Assert.NotNull(editButton);
+    }
 }
