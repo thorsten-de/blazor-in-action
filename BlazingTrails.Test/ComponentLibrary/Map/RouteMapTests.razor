@@ -21,4 +21,24 @@
         _routeMapModuleInitializeInvocation
             .VerifyInvoke("initialize", calledTimes: 1);
     }
+
+    [Fact]
+    public void CallsDeleteLastWaypointFunction_When_DeleteLastWaypointButtonClicked()
+    {
+        // Arrange: Setup the fake JS module to return a LatLong object when the deleteLastWaypoint function is called
+        var latLongResult = new LatLong(1, 2);
+        var plannedInvocation = _routeMapModule
+            .Setup<LatLong>("deleteLastWaypoint", _ => true)
+            .SetResult(latLongResult);
+
+        var cut = Render(@<RouteMap />);
+        var deleteWaypointButton = cut.Find("button[title=\"Delete the last waypoint\"]");
+
+        // Act
+        deleteWaypointButton.Click();
+
+        // Assert
+        plannedInvocation.VerifyInvoke("deleteLastWaypoint", calledTimes: 1);
+
+    }
 }
