@@ -1,0 +1,24 @@
+﻿@using BlazingTrails.ComponentLibrary.Map
+@inherits TestContext
+
+@code {
+    private BunitJSModuleInterop _routeMapModule;
+    private JSRuntimeInvocationHandler _routeMapModuleInitializeInvocation;
+
+    public RouteMapTests()
+    {
+        _routeMapModule = JSInterop.SetupModule();
+        _routeMapModuleInitializeInvocation = _routeMapModule
+            .SetupVoid("initialize", _ => true)
+            .SetVoidResult();
+    }
+
+    [Fact]
+    public void InitializeMap_When_ComponentFirstRenders()
+    {
+        var cut = Render(@<RouteMap />);
+
+        _routeMapModuleInitializeInvocation
+            .VerifyInvoke("initialize", calledTimes: 1);
+    }
+}
